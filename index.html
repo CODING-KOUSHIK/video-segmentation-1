@@ -5,298 +5,316 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>5-Second Video Annotator</title>
+<title>YouTube Video Annotator</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
 
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f4f4f4;
-        color: #222;
-    }
+* {
+    box-sizing: border-box;
+}
 
-    .container {
-        max-width: 1000px;
-        margin: auto;
-        padding: 20px;
-    }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f4f6;
+    color: #222;
+}
 
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
 
-    .card {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
 
-    label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 8px;
-    }
+.card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
 
-    input,
-    textarea,
-    button {
-        font-size: 16px;
-    }
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
 
-    input[type="text"],
-    textarea {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        margin-bottom: 15px;
-    }
+input,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
 
-    textarea {
-        min-height: 100px;
-        resize: vertical;
-    }
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
 
-    button {
-        border: none;
-        padding: 12px 18px;
-        border-radius: 8px;
-        cursor: pointer;
-        margin: 5px;
-        font-weight: bold;
-    }
+button {
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 5px;
+}
 
-    .start-btn {
-        background: #222;
-        color: white;
-        width: 100%;
-    }
+.primary {
+    background: #222;
+    color: white;
+}
 
-    .nav-btn {
-        background: #ddd;
-    }
+.secondary {
+    background: #ddd;
+    color: #222;
+}
 
-    .save-btn {
-        background: #222;
-        color: white;
-    }
+.danger {
+    background: #b00020;
+    color: white;
+}
 
-    .download-btn {
-        background: #222;
-        color: white;
-        width: 100%;
-        margin-top: 15px;
-    }
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
-    button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
+.hidden {
+    display: none;
+}
 
-    video {
-        width: 100%;
-        max-height: 550px;
-        background: black;
-        border-radius: 10px;
-    }
+#player {
+    width: 100%;
+}
 
-    .segment-info {
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-        margin: 15px 0;
-    }
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: black;
+    border-radius: 10px;
+    overflow: hidden;
+}
 
-    .time-info {
-        text-align: center;
-        color: #666;
-        margin-bottom: 15px;
-    }
+#youtube-player {
+    width: 100%;
+    height: 100%;
+}
 
-    .progress-container {
-        width: 100%;
-        height: 10px;
-        background: #ddd;
-        border-radius: 10px;
-        overflow: hidden;
-        margin: 15px 0;
-    }
+.segment-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    margin-top: 15px;
+}
 
-    .progress {
-        height: 100%;
-        width: 0%;
-        background: #222;
-    }
+.segment-time {
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+    margin-top: 5px;
+}
 
-    .status {
-        text-align: center;
-        padding: 10px;
-        font-weight: bold;
-    }
+.progress-container {
+    width: 100%;
+    height: 10px;
+    background: #ddd;
+    border-radius: 10px;
+    margin-top: 15px;
+    overflow: hidden;
+}
 
-    .table-container {
-        overflow-x: auto;
-    }
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #222;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+.status {
+    text-align: center;
+    font-weight: bold;
+    padding: 12px;
+}
 
-    th,
-    td {
-        padding: 10px;
-        border: 1px solid #ddd;
-        text-align: left;
-    }
+.controls {
+    text-align: center;
+}
 
-    th {
-        background: #eee;
-    }
+.table-container {
+    overflow-x: auto;
+}
 
-    .hidden {
-        display: none;
-    }
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background: #eee;
+}
+
+.completed {
+    background: #e8f5e9;
+}
+
+.counter {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
 </style>
 </head>
+
 
 <body>
 
 <div class="container">
 
-    <h1>🎥 5-Second Video Annotator</h1>
-
-    <!-- VIDEO INPUT -->
-    <div class="card" id="setupCard">
-
-        <label>Video URL</label>
-
-        <input
-            type="text"
-            id="videoUrl"
-            placeholder="Paste direct MP4 video URL here"
-        >
-
-        <label>Segment Duration (seconds)</label>
-
-        <input
-            type="number"
-            id="segmentDuration"
-            value="5"
-            min="1"
-        >
-
-        <button class="start-btn" onclick="startProject()">
-            START ANNOTATION
-        </button>
-
-        <p>
-            Example segments:
-            0–5 sec, 5–10 sec, 10–15 sec...
-        </p>
-
-    </div>
+<h1>🎥 YouTube Video Annotator</h1>
 
 
-    <!-- VIDEO -->
-    <div class="card hidden" id="videoCard">
+<!-- =====================================================
+     SETUP
+===================================================== -->
 
-        <video
-            id="video"
-            controls
-            preload="metadata"
-        ></video>
+<div class="card" id="setupCard">
 
-        <div class="segment-info" id="segmentInfo">
-            Segment 1
-        </div>
+    <label>YouTube Video URL</label>
 
-        <div class="time-info" id="timeInfo">
-            0 – 5 seconds
-        </div>
+    <input
+        type="text"
+        id="youtubeUrl"
+        placeholder="Paste YouTube video link"
+    >
 
-        <div class="progress-container">
-            <div class="progress" id="progress"></div>
-        </div>
+    <label>Segment Duration (seconds)</label>
 
-        <div class="status" id="status">
-            Ready
-        </div>
+    <input
+        type="number"
+        id="segmentDuration"
+        value="5"
+        min="1"
+        step="1"
+    >
+
+    <button
+        class="primary"
+        onclick="startAnnotation()"
+        style="width:100%;"
+    >
+        START ANNOTATION
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+     VIDEO
+===================================================== -->
+
+<div class="card hidden" id="videoCard">
+
+    <div class="video-wrapper">
+
+        <div id="youtube-player"></div>
 
     </div>
 
 
-    <!-- COMMENT -->
-    <div class="card hidden" id="commentCard">
+    <div
+        class="segment-title"
+        id="segmentTitle"
+    >
+        Segment 1
+    </div>
 
-        <label>
-            Comment for this segment
-        </label>
 
-        <textarea
-            id="comment"
-            placeholder="Write what is happening in this segment..."
-        ></textarea>
+    <div
+        class="segment-time"
+        id="segmentTime"
+    >
+        00:00 → 00:05
+    </div>
 
-        <div style="text-align:center;">
 
-            <button
-                class="nav-btn"
-                onclick="previousSegment()"
-                id="previousBtn"
-            >
-                ◀ Previous
-            </button>
+    <div class="progress-container">
 
-            <button
-                class="save-btn"
-                onclick="saveAndNext()"
-                id="saveBtn"
-            >
-                Save & Next ▶
-            </button>
-
-        </div>
+        <div
+            class="progress-bar"
+            id="progressBar"
+        ></div>
 
     </div>
 
 
-    <!-- RESULT -->
-    <div class="card hidden" id="resultCard">
+    <div
+        class="status"
+        id="status"
+    >
+        Loading...
+    </div>
 
-        <h2>Annotation Results</h2>
+</div>
 
-        <div class="table-container">
 
-            <table>
+<!-- =====================================================
+     COMMENT
+===================================================== -->
 
-                <thead>
-                    <tr>
-                        <th>Segment</th>
-                        <th>Start</th>
-                        <th>End</th>
-                        <th>Comment</th>
-                    </tr>
-                </thead>
+<div class="card hidden" id="commentCard">
 
-                <tbody id="resultTable"></tbody>
+    <div class="counter" id="counter">
+        Segment 1
+    </div>
 
-            </table>
 
-        </div>
+    <label>
+        Comment / Description
+    </label>
+
+
+    <textarea
+        id="comment"
+        placeholder="Describe what is happening in this segment..."
+    ></textarea>
+
+
+    <div class="controls">
 
         <button
-            class="download-btn"
-            onclick="downloadCSV()"
+            class="secondary"
+            id="previousBtn"
+            onclick="previousSegment()"
         >
-            ⬇ Download CSV
+            ◀ Previous
+        </button>
+
+
+        <button
+            class="primary"
+            id="saveNextBtn"
+            onclick="saveAndNext()"
+        >
+            Save & Next ▶
         </button>
 
     </div>
@@ -304,85 +322,300 @@
 </div>
 
 
+<!-- =====================================================
+     RESULTS
+===================================================== -->
+
+<div class="card hidden" id="resultCard">
+
+    <h2>📋 Annotations</h2>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Segment</th>
+                    <th>Start (sec)</th>
+                    <th>End (sec)</th>
+                    <th>Comment</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="resultTable"></tbody>
+
+        </table>
+
+    </div>
+
+
+    <button
+        class="primary"
+        onclick="downloadCSV()"
+        style="width:100%; margin-top:15px;"
+    >
+        ⬇ Download CSV
+    </button>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     YOUTUBE API
+===================================================== -->
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+
 <script>
 
-let video;
+let player = null;
+
+let videoId = "";
+
 let segmentDuration = 5;
 
-let currentSegment = 0;
+let videoDuration = 0;
 
 let totalSegments = 0;
 
+let currentSegment = 0;
+
 let segments = [];
 
-let projectStarted = false;
+let annotationStarted = false;
+
+let monitorTimer = null;
 
 
-// ============================================================
-// START PROJECT
-// ============================================================
+// =====================================================
+// EXTRACT YOUTUBE VIDEO ID
+// =====================================================
 
-function startProject() {
+function getYouTubeVideoId(url) {
 
-    const videoUrl =
-        document.getElementById("videoUrl").value.trim();
+    try {
+
+        const parsed =
+            new URL(url);
+
+        // youtube.com/watch?v=XXXXXXXX
+        if (
+            parsed.hostname.includes("youtube.com")
+        ) {
+
+            return parsed.searchParams.get("v");
+
+        }
+
+        // youtu.be/XXXXXXXX
+        if (
+            parsed.hostname.includes("youtu.be")
+        ) {
+
+            return parsed.pathname.substring(1);
+
+        }
+
+        // youtube.com/embed/XXXXXXXX
+        if (
+            parsed.pathname.includes("/embed/")
+        ) {
+
+            return parsed.pathname
+                .split("/embed/")[1]
+                .split("/")[0];
+
+        }
+
+    } catch (error) {
+
+        return null;
+
+    }
+
+    return null;
+}
+
+
+// =====================================================
+// START ANNOTATION
+// =====================================================
+
+function startAnnotation() {
+
+    const url =
+        document
+            .getElementById("youtubeUrl")
+            .value
+            .trim();
+
 
     segmentDuration =
-        parseFloat(
-            document.getElementById("segmentDuration").value
+        parseInt(
+            document
+                .getElementById("segmentDuration")
+                .value
         );
 
-    if (!videoUrl) {
-        alert("Please enter a video URL.");
+
+    if (!url) {
+
+        alert(
+            "Please enter a YouTube video URL."
+        );
+
         return;
+
     }
 
-    if (!segmentDuration || segmentDuration <= 0) {
-        alert("Please enter a valid segment duration.");
+
+    videoId =
+        getYouTubeVideoId(url);
+
+
+    if (!videoId) {
+
+        alert(
+            "Invalid YouTube URL."
+        );
+
         return;
+
     }
 
-    video =
-        document.getElementById("video");
 
-    video.src = videoUrl;
+    if (
+        !segmentDuration ||
+        segmentDuration <= 0
+    ) {
 
-    video.load();
+        alert(
+            "Enter a valid segment duration."
+        );
 
-    video.addEventListener(
-        "loadedmetadata",
-        initializeSegments,
-        { once: true }
-    );
+        return;
+
+    }
+
+
+    annotationStarted = true;
+
+
+    document
+        .getElementById("setupCard")
+        .classList.add("hidden");
+
 
     document
         .getElementById("videoCard")
         .classList.remove("hidden");
 
+
     document
         .getElementById("commentCard")
         .classList.remove("hidden");
 
-    projectStarted = true;
 
-    document
-        .getElementById("setupCard")
-        .classList.add("hidden");
+    createYouTubePlayer();
+
 }
 
 
-// ============================================================
-// INITIALIZE SEGMENTS
-// ============================================================
+// =====================================================
+// CREATE YOUTUBE PLAYER
+// =====================================================
 
-function initializeSegments() {
+function createYouTubePlayer() {
 
-    const duration = video.duration;
+    if (
+        typeof YT === "undefined" ||
+        typeof YT.Player === "undefined"
+    ) {
+
+        setTimeout(
+            createYouTubePlayer,
+            500
+        );
+
+        return;
+
+    }
+
+
+    player =
+        new YT.Player(
+            "youtube-player",
+            {
+
+                videoId: videoId,
+
+                playerVars: {
+
+                    controls: 1,
+
+                    rel: 0,
+
+                    modestbranding: 1,
+
+                    playsinline: 1
+
+                },
+
+                events: {
+
+                    onReady:
+                        onPlayerReady,
+
+                    onStateChange:
+                        onPlayerStateChange
+
+                }
+
+            }
+        );
+
+}
+
+
+// =====================================================
+// PLAYER READY
+// =====================================================
+
+function onPlayerReady(event) {
+
+    videoDuration =
+        player.getDuration();
+
+
+    createSegments();
+
+
+    loadSegment();
+
+}
+
+
+// =====================================================
+// CREATE SEGMENTS
+// =====================================================
+
+function createSegments() {
 
     totalSegments =
-        Math.ceil(duration / segmentDuration);
+        Math.ceil(
+            videoDuration /
+            segmentDuration
+        );
+
 
     segments = [];
+
 
     for (
         let i = 0;
@@ -391,13 +624,18 @@ function initializeSegments() {
     ) {
 
         const start =
-            i * segmentDuration;
+            i *
+            segmentDuration;
+
 
         const end =
             Math.min(
-                start + segmentDuration,
-                duration
+                start +
+                segmentDuration,
+
+                videoDuration
             );
+
 
         segments.push({
 
@@ -414,175 +652,272 @@ function initializeSegments() {
                 ""
 
         });
+
     }
 
-    currentSegment = 0;
-
-    loadSegment();
-
-    document
-        .getElementById("resultCard")
-        .classList.remove("hidden");
 }
 
 
-// ============================================================
-// LOAD CURRENT SEGMENT
-// ============================================================
+// =====================================================
+// LOAD SEGMENT
+// =====================================================
 
 function loadSegment() {
 
-    if (!segments.length) {
+    if (
+        !segments.length
+    ) {
+
         return;
+
     }
+
 
     const segment =
         segments[currentSegment];
 
-    video.pause();
 
-    video.currentTime =
-        segment.start;
+    player.seekTo(
+        segment.start,
+        true
+    );
+
+
+    player.pauseVideo();
+
 
     document
-        .getElementById("segmentInfo")
+        .getElementById("segmentTitle")
         .innerText =
         "Segment " +
         segment.segment +
         " / " +
         totalSegments;
 
+
     document
-        .getElementById("timeInfo")
+        .getElementById("segmentTime")
         .innerText =
         formatTime(segment.start) +
-        " – " +
-        formatTime(segment.end) +
-        " seconds";
+        " → " +
+        formatTime(segment.end);
+
+
+    document
+        .getElementById("counter")
+        .innerText =
+        "Segment " +
+        segment.segment +
+        " of " +
+        totalSegments;
+
 
     document
         .getElementById("comment")
         .value =
         segment.comment || "";
 
+
     document
         .getElementById("status")
         .innerText =
         "Ready — press Play";
 
+
     updateButtons();
+
 
     updateTable();
 
+
     updateProgress();
+
 }
 
 
-// ============================================================
-// VIDEO TIME UPDATE
-// ============================================================
+// =====================================================
+// PLAYER STATE CHANGE
+// =====================================================
 
-videoTimeUpdateHandler = function() {
+function onPlayerStateChange(event) {
 
-    if (!projectStarted) {
-        return;
+    if (
+        event.data ===
+        YT.PlayerState.PLAYING
+    ) {
+
+        document
+            .getElementById("status")
+            .innerText =
+            "▶ Playing segment";
+
     }
 
-    if (!segments.length) {
-        return;
+
+    if (
+        event.data ===
+        YT.PlayerState.PAUSED
+    ) {
+
+        if (
+            annotationStarted
+        ) {
+
+            document
+                .getElementById("status")
+                .innerText =
+                "⏸ Paused";
+
+        }
+
     }
+
+}
+
+
+// =====================================================
+// MONITOR VIDEO TIME
+// =====================================================
+
+monitorTimer =
+    setInterval(
+        monitorSegment,
+        100
+    );
+
+
+function monitorSegment() {
+
+    if (
+        !annotationStarted ||
+        !player ||
+        !segments.length
+    ) {
+
+        return;
+
+    }
+
+
+    let currentTime;
+
+
+    try {
+
+        currentTime =
+            player.getCurrentTime();
+
+    } catch (error) {
+
+        return;
+
+    }
+
 
     const segment =
         segments[currentSegment];
 
-    const current =
-        video.currentTime;
+
+    if (!segment) {
+
+        return;
+
+    }
+
+
+    const elapsed =
+        currentTime -
+        segment.start;
+
 
     const duration =
         segment.end -
         segment.start;
 
-    const elapsed =
-        current -
-        segment.start;
 
-    let percent =
-        (elapsed / duration) * 100;
+    let percentage =
+        (
+            elapsed /
+            duration
+        ) * 100;
 
-    percent =
+
+    percentage =
         Math.max(
             0,
             Math.min(
                 100,
-                percent
+                percentage
             )
         );
 
+
     document
-        .getElementById("progress")
+        .getElementById("progressBar")
         .style.width =
-        percent + "%";
+        percentage + "%";
 
 
-    // --------------------------------------------------------
-    // AUTOMATICALLY STOP AT SEGMENT END
-    // --------------------------------------------------------
+    // -----------------------------------------------------
+    // STOP AT SEGMENT END
+    // -----------------------------------------------------
 
     if (
-        current >= segment.end
+        currentTime >=
+        segment.end - 0.05
     ) {
 
-        video.pause();
+        player.pauseVideo();
 
-        video.currentTime =
-            segment.end;
+
+        player.seekTo(
+            segment.end,
+            true
+        );
+
 
         document
             .getElementById("status")
             .innerText =
-            "Segment finished — add your comment";
+            "⏹ Segment finished — enter your comment";
 
     }
 
-};
+}
 
 
-// ============================================================
-// ATTACH EVENT
-// ============================================================
-
-document
-    .getElementById("video")
-    .addEventListener(
-        "timeupdate",
-        videoTimeUpdateHandler
-    );
-
-
-// ============================================================
+// =====================================================
 // SAVE CURRENT COMMENT
-// ============================================================
+// =====================================================
 
 function saveCurrentComment() {
 
-    const comment =
+    if (
+        !segments[currentSegment]
+    ) {
+
+        return;
+
+    }
+
+
+    segments[currentSegment].comment =
         document
             .getElementById("comment")
             .value
             .trim();
 
-    segments[currentSegment].comment =
-        comment;
 }
 
 
-// ============================================================
+// =====================================================
 // SAVE & NEXT
-// ============================================================
+// =====================================================
 
 function saveAndNext() {
 
     saveCurrentComment();
+
 
     if (
         currentSegment <
@@ -591,52 +926,79 @@ function saveAndNext() {
 
         currentSegment++;
 
+
         loadSegment();
 
-        video.play();
+
+        setTimeout(
+            function() {
+
+                player.playVideo();
+
+            },
+            300
+        );
+
 
     } else {
 
-        video.pause();
+        player.pauseVideo();
+
 
         updateTable();
+
 
         document
             .getElementById("status")
             .innerText =
             "🎉 All segments completed!";
 
+
         alert(
-            "All segments have been completed. You can now download the CSV."
+            "All segments have been completed."
         );
+
     }
+
 }
 
 
-// ============================================================
-// PREVIOUS
-// ============================================================
+// =====================================================
+// PREVIOUS SEGMENT
+// =====================================================
 
 function previousSegment() {
 
     saveCurrentComment();
 
-    if (currentSegment > 0) {
+
+    if (
+        currentSegment > 0
+    ) {
 
         currentSegment--;
 
+
         loadSegment();
 
-        video.play();
+
+        setTimeout(
+            function() {
+
+                player.playVideo();
+
+            },
+            300
+        );
 
     }
 
 }
 
 
-// ============================================================
-// UPDATE BUTTONS
-// ============================================================
+// =====================================================
+// BUTTON STATE
+// =====================================================
 
 function updateButtons() {
 
@@ -645,66 +1007,69 @@ function updateButtons() {
         .disabled =
         currentSegment === 0;
 
+
     if (
         currentSegment ===
         totalSegments - 1
     ) {
 
         document
-            .getElementById("saveBtn")
+            .getElementById("saveNextBtn")
             .innerText =
             "Save ✓";
 
     } else {
 
         document
-            .getElementById("saveBtn")
+            .getElementById("saveNextBtn")
             .innerText =
             "Save & Next ▶";
 
     }
+
 }
 
 
-// ============================================================
+// =====================================================
 // FORMAT TIME
-// ============================================================
+// =====================================================
 
 function formatTime(seconds) {
 
     seconds =
         Math.floor(seconds);
 
+
     const minutes =
-        Math.floor(seconds / 60);
+        Math.floor(
+            seconds / 60
+        );
+
 
     const secs =
         seconds % 60;
 
+
     return (
-        String(minutes).padStart(2, "0") +
+
+        String(minutes)
+            .padStart(2, "0")
+
+        +
+
         ":" +
-        String(secs).padStart(2, "0")
+
+        String(secs)
+            .padStart(2, "0")
+
     );
+
 }
 
 
-// ============================================================
-// PROGRESS
-// ============================================================
-
-function updateProgress() {
-
-    document
-        .getElementById("progress")
-        .style.width =
-        "0%";
-}
-
-
-// ============================================================
-// UPDATE RESULT TABLE
-// ============================================================
+// =====================================================
+// UPDATE TABLE
+// =====================================================
 
 function updateTable() {
 
@@ -712,13 +1077,27 @@ function updateTable() {
         document
             .getElementById("resultTable");
 
+
     tbody.innerHTML = "";
+
 
     segments.forEach(
         function(segment) {
 
             const row =
                 document.createElement("tr");
+
+
+            if (
+                segment.comment
+            ) {
+
+                row.classList.add(
+                    "completed"
+                );
+
+            }
+
 
             row.innerHTML =
 
@@ -727,50 +1106,63 @@ function updateTable() {
                 "</td>" +
 
                 "<td>" +
-                formatTime(segment.start) +
+                segment.start +
                 "</td>" +
 
                 "<td>" +
-                formatTime(segment.end) +
+                segment.end +
                 "</td>" +
 
                 "<td>" +
-                escapeHTML(segment.comment) +
+                escapeHTML(
+                    segment.comment
+                ) +
                 "</td>";
 
-            tbody.appendChild(row);
+
+            tbody.appendChild(
+                row
+            );
 
         }
     );
+
 }
 
 
-// ============================================================
+// =====================================================
 // ESCAPE HTML
-// ============================================================
+// =====================================================
 
 function escapeHTML(text) {
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     div.textContent =
         text;
 
+
     return div.innerHTML;
+
 }
 
 
-// ============================================================
-// DOWNLOAD CSV
-// ============================================================
+// =====================================================
+// CSV DOWNLOAD
+// =====================================================
 
 function downloadCSV() {
 
     saveCurrentComment();
 
+
     let csv =
         "Segment,Start_Seconds,End_Seconds,Start_Time,End_Time,Comment\n";
+
 
     segments.forEach(
         function(segment) {
@@ -786,57 +1178,87 @@ function downloadCSV() {
                 segment.end +
                 "," +
 
-                formatTime(segment.start) +
+                formatTime(
+                    segment.start
+                ) +
                 "," +
 
-                formatTime(segment.end) +
+                formatTime(
+                    segment.end
+                ) +
                 "," +
 
-                csvEscape(segment.comment) +
+                csvEscape(
+                    segment.comment
+                ) +
 
                 "\n";
 
         }
     );
 
+
     const blob =
         new Blob(
             [csv],
             {
                 type:
-                "text/csv;charset=utf-8;"
+                    "text/csv;charset=utf-8;"
             }
         );
 
+
     const url =
-        URL.createObjectURL(blob);
+        URL.createObjectURL(
+            blob
+        );
+
 
     const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
 
-    link.href = url;
+
+    link.href =
+        url;
+
 
     link.download =
-        "video_annotations.csv";
+        "youtube_video_annotations.csv";
 
-    document.body.appendChild(link);
+
+    document
+        .body
+        .appendChild(link);
+
 
     link.click();
 
-    document.body.removeChild(link);
 
-    URL.revokeObjectURL(url);
+    document
+        .body
+        .removeChild(link);
+
+
+    URL.revokeObjectURL(
+        url
+    );
+
 }
 
 
-// ============================================================
+// =====================================================
 // CSV ESCAPE
-// ============================================================
+// =====================================================
 
 function csvEscape(value) {
 
     value =
-        String(value || "");
+        String(
+            value || ""
+        );
+
 
     value =
         value.replace(
@@ -844,9 +1266,11 @@ function csvEscape(value) {
             '""'
         );
 
+
     return '"' +
         value +
         '"';
+
 }
 
 </script>
